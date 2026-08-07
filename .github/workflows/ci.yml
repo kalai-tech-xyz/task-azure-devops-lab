@@ -26,19 +26,20 @@ jobs:
 
     # STAGE 2: Security Scan (Gated step)
     - name: Run Trivy Security Scan
-      uses: aquasecurity/trivy-action@master
+      uses: aquasecurity/trivy-action@0.28.0
       with:
         scan-type: 'fs'
         scan-ref: '.'
         exit-code: '1' # Forces failure when hardcoded secrets are caught
         severity: 'CRITICAL,HIGH'
+        limit-severities-for-sarif: false
 
     # STAGE 3: Unit Tests (Blocked by Stage 2)
     - name: Run Unit Tests
       run: |
         pip install flask pytest
         export PYTHONPATH=.
-        pytest app/test_app.py
+        pytest app/
 
     # STAGE 4: Azure Authentication
     - name: Azure Login
