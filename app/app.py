@@ -1,11 +1,12 @@
 from flask import Flask
+import os
 
 app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    # Deliberate Azure credential leak to trigger security scan failure
-    AZURE_STORAGE_CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=devopslab;AccountKey=abcdefghijklmnopqrstuvwxyz0123456789==;EndpointSuffix=core.windows.net" 
+    # Fixed: Safe environment variable lookup
+    AZURE_STORAGE_CONNECTION_STRING = os.getenv("AZURE_STORAGE_CONNECTION_STRING", "development_fallback")
     return "Hello, Azure DevOps World!"
 
 if __name__ == "__main__":
